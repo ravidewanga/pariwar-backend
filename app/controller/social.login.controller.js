@@ -31,27 +31,23 @@ exports.socialLogin = (req, res) => {
     // Create a Social Data
     const { name, email, password, provider, provider_id, provider_pic, token, created_at, updated_at, active } = req.body.data;
 
+    const socialData = {
+        name: name,
+        email: email,
+        password: password,
+        provider: provider,
+        provider_id: provider_id,
+        provider_pic: provider_pic,
+        token: token
+        //published: req.body.published ? req.body.published : false
+    };
+    
     verify(token).then(() => {
-        console.log('1');
-        const socialData = {
-            name: name,
-            email: email,
-            password: password,
-            provider: provider,
-            provider_id: provider_id,
-            provider_pic: provider_pic,
-            token: token
-            //published: req.body.published ? req.body.published : false
-        };
-
-        console.log('2');
         // Save Social Data in the database
         User.create(socialData).then(data => {
-            console.log('3');
             res.send(data);
         })
             .catch(err => {
-                console.log('failed db insert');
                 res.status(500).send({
                     message:
                         err.message || "Some error occurred while creating the Tutorial."
