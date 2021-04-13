@@ -6,7 +6,8 @@ module.exports = (sequelize) => {
         password: {type: Sequelize.STRING},
         provider: {type: Sequelize.STRING},
         provider_pic: {type: Sequelize.STRING},
-        token: {type: Sequelize.STRING},
+        access_token: {type: Sequelize.STRING},
+        id_token: {type: Sequelize.STRING},
         createdAt: {type: Sequelize.DATE},
         updatedAt: {type: Sequelize.DATE},
         active: {type: Sequelize.BOOLEAN}
