@@ -16,6 +16,7 @@ async function verify(token) {
     console.log(userid);
     // If request specified a G Suite domain:
     // const domain = payload['hd'];
+    return true;
 }
 
 // Retrieve all Tutorials from the database.
@@ -41,8 +42,9 @@ exports.socialLogin = (req, res) => {
         token: token
         //published: req.body.published ? req.body.published : false
     };
-    
-    verify(token).then(() => {
+
+    verify(token).then( verified => {
+        //console.log('check'+ verified);
         // Save Social Data in the database
         User.create(socialData).then(data => {
             res.send(data);
