@@ -16,47 +16,60 @@ async function verify(id_token) {
     return true;
 }
 
-function isEmailUnique (email) {
+function isEmailUnique(email) {
     return User.count({ where: { email: email } })
-      .then(count => {
-        if (count != 0) {
-          return false;
-        }
-        return true;
-    });
+        .then(count => {
+            if (count != 0) {
+                return false;
+            }
+            return true;
+        });
 }
 
 // Retrieve all Tutorials from the database.
 exports.socialLogin = (req, res) => {
-    const { name, email, password, provider, provider_id, provider_pic,access_token,id_token} = req.body.data;
+    const { name, email, password, provider, provider_id, provider_pic, access_token, id_token } = req.body.data;
 
-    isEmailUnique(email).then(isUnique => {
-        if (isUnique) {
-            const socialData = {
-                name: name,
-                email: email,
-                password: password,
-                provider: provider,
-                provider_id: provider_id,
-                provider_pic: provider_pic,
-                access_token: access_token,
-                id_token: id_token
-                //published: req.body.published ? req.body.published : false
-            };
-            verify(id_token).then( verified => {
+    const socialData = {
+        name: name,
+        email: email,
+        password: password,
+        provider: provider,
+        provider_id: provider_id,
+        provider_pic: provider_pic,
+        access_token: access_token,
+        id_token: id_token
+        //published: req.body.published ? req.body.published : false
+    };
+
+    verify(id_token).then(verified => {
+        isEmailUnique(email).then(isUnique => {
+            if (isUnique) {
                 User.create(socialData).then(data => {
                     res.send(data);
                 }).catch(err => {
-                        res.status(500).send({
-                            message:
-                                err.message || "Some error occurred while creating the Tutorial."
-                        });
+                    res.status(500).send({
+                        message:
+                            err.message || "Some error occurred while creating the Tutorial."
                     });
-            }).catch(console.error);     
-        }else{
-            res.status(500).send({
-                message:"Account already exist."
-            });
-        }
-    });
+                });
+            } else {
+                //-----------update token----------------
+                User.update({ 
+                    provider_id: provider_id,
+                    provider_pic: provider_pic,
+                    access_token: access_token,
+                    id_token: id_token
+                    }, {
+                    where: {
+                        email: email
+                    }
+                });
+                res.send(socialData);
+            }
+        });
+    }).catch(console.error);
+
+
+
 };
