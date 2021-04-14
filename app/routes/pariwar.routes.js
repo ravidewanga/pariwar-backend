@@ -1,9 +1,10 @@
 module.exports = app => {
-    const social_login = require("../controller/social.login.controller.js");
+    const login = require("../controller/login.controller.js");
 
     var router = require("express").Router();
 
-    router.post("/social-login", social_login.socialLogin);
+    router.post("/social-login", login.socialLogin);
+    router.post("/login", login.customLogin);
     
     // Create a new Student
     //router.post("/", student.createData);
