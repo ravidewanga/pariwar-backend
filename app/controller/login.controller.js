@@ -80,10 +80,18 @@ const socialLogin = (req, res) => {
 const customLogin = async (req,res) =>  {
     // jwt.verify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTgzODI3MDEsImV4cCI6MTYxODM4NDUwMX0.6Xy-konGd-6mQN_d9vGIi_a3JvNHAXYWEvU0RFp9Jf0', SECRET, function(err, decoded) {
     //     console.log(decoded) // bar
-    // });    
+    // });
     const {email,password} = req.body;
-    User.findAll({where:{email:email}}).then(data=>{
+    const saltRounds = 10;
+    User.findAll({where:{email:email}}).then(async (data)=>{
+
         const dbPassword = data[0].dataValues.password;
+
+        // bcrypt.hash(password, saltRounds, function(err, hash) {
+        //     console.log(hash);
+        // });
+        // return false;
+
         //console.log(password);
         const valid = await bcrypt.compare(password,dbPassword);
         //console.log(valid);
