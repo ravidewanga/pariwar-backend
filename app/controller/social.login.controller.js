@@ -34,6 +34,7 @@ exports.socialLogin = (req, res) => {
     // }
 
     // Create a Social Data
+    // vasu test
 
     const { name, email, password, provider, provider_id, provider_pic, token, created_at, updated_at, active } = req.body.data;
 
