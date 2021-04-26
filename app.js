@@ -1,28 +1,33 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const db = require("./app/model/index");
+const mongoose = require("mongoose");
+const User = require('./app/model/user.model');
+const { Router } = require("express");
 
 const app = express();
 
-var corsOptions = {
-    origin: "http://localhost:8081"
-};
+mongoose.connect('mongodb+srv://admin:00rah0ul@pariwardb.k3kiw.mongodb.net/pariwar?retryWrites=true&w=majority', 
+{useNewUrlParser: true, useUnifiedTopology: true});
 
-app.use(cors());
-
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-db.sequelize.sync();
-
-app.get("/", (req, res) => {
-    res.json({ message: "Welcome to the node js application." });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('we\'re connected!');
 });
 
-require("./app/routes/pariwar.routes")(app);
+Router.post('/',(req,res,next) => {
+    const user = new User({
+        _id : new mongoose.Types.ObjectId(),
+        name : req.body.name,
+        age : req.body.age
+    });
+
+    user.save().then(result => {
+        console.log(result);
+    })
+    .catch(err => console.log(err));
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
