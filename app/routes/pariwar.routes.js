@@ -1,9 +1,12 @@
-module.exports = app => {
-    const login = require("../controller/login.controller.js");
+var router = require("express").Router();
+const post = require("../controller/post.controller");
 
-    var router = require("express").Router();
+console.log('route page call');
 
-    router.post("/social-login", login.socialLogin);
-    router.post("/login", login.customLogin);
-    app.use('/api', router);
-};
+    router.get('/home',(req,res) =>{
+        console.log('Home page called.');
+    });
+    router.get("/post", post.allposts);
+    router.post("/post", post.postsubmit);
+
+module.exports = router;

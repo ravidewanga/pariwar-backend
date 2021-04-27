@@ -1,14 +1,11 @@
-module.exports = {
-  HOST: "localhost",
-  PORT: 3306,
-  USER: "root",
-  PASSWORD: "",
-  DB: "pariwar_db",
-  dialect: "mysql",
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-};
+const mongoose = require("mongoose");
+mongoose.connect('mongodb+srv://admin:00rah0ul@pariwardb.k3kiw.mongodb.net/pariwar?retryWrites=true&w=majority', 
+{useNewUrlParser: true, useUnifiedTopology: true});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('we\'re connected!');
+});
+
+module.exports = db;
