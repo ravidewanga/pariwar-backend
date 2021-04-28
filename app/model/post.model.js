@@ -5,7 +5,10 @@ const postScheme = mongoose.Schema({
     title   : { type: String, required: true },
     author : String,
     body : String,
-    //likes : { type: Number, default: 0},
+    likes : [{ 
+        user_id: Schema.Types.ObjectId, ref: 'User',
+        created_at : { type : Date, default: Date.now }
+    }],
     //comments : { type: Number, default: 0},
     attachment : { type : String, default: null },
     is_private : { type : Boolean, default: false },
