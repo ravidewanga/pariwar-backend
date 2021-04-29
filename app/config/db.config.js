@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-mongoose.connect('mongodb+srv://admin:00rah0ul@pariwardb.k3kiw.mongodb.net/pariwar?retryWrites=true&w=majority', 
+mongoose.connect(`mongodb+srv://admin:${process.env.DatabasePassword}@pariwardb.k3kiw.mongodb.net/pariwar?retryWrites=true&w=majority`, 
 {useNewUrlParser: true, useUnifiedTopology: true});
 
 const db = mongoose.connection;

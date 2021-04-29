@@ -8,5 +8,4 @@ console.log('route page call');
     });
     router.get("/post", post.allposts);
     router.post("/post", post.postsubmit);
-
 module.exports = router;

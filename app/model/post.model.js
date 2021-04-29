@@ -6,7 +6,7 @@ const postScheme = mongoose.Schema({
     author : String,
     body : String,
     likes : [{ 
-        user_id: Schema.Types.ObjectId, ref: 'User',
+        //user_id: Schema.Types.ObjectId, ref: 'User',
         created_at : { type : Date, default: Date.now }
     }],
     //comments : { type: Number, default: 0},
@@ -14,7 +14,7 @@ const postScheme = mongoose.Schema({
     is_private : { type : Boolean, default: false },
     is_active : { type : Boolean, default: true },
     create_at : { type : Date, default: Date.now },
-    Updated_at : { type : Date, default: null },
+    Updated_at : { type : Date, default: null }
 });
 
 module.exports = mongoose.model('Post',postScheme);
