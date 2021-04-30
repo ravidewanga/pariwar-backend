@@ -1,45 +1,43 @@
-const mongoose = require("mongoose");
-const User = require('../model/user.model');
-
-const allusers = (req,res) => {
+"use strict";
+exports.__esModule = true;
+var mongoose = require("mongoose");
+var User = require("../model/user.model");
+var allusers = function (req, res) {
     console.log('all users');
     User.find()
-    .exec()
-    .then(docs => {
-        if(docs.length >= 0){
-            res.status(200).json({'code':503,'msg':'No record found'});
-        } else {
+        .exec()
+        .then(function (docs) {
+        console.log("doc length-" + docs.length);
+        if (docs.length >= 0) {
             res.status(200).json(docs);
         }
-    })
-    .catch(err => {
+        else {
+            res.status(200).json({ 'code': 503, 'msg': 'No record found' });
+        }
+    })["catch"](function (err) {
         res.status(500).json({
-            error:err
+            error: err
         });
     });
 };
-
-const createUser = (req,res) => {
-    const user = new User({
-        _id : new mongoose.Types.ObjectId(),
-        name : req.body.name,
-        age : req.body.age,
+var createUser = function (req, res) {
+    var user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        age: req.body.age
     });
-    user.save().then(result => {
+    user.save().then(function (result) {
         res.status(201).json({
             message: 'user created',
-            post : result
+            post: result
         });
-    })
-    .catch(err => {
+    })["catch"](function (err) {
         res.status(500).json({
-            error : err
+            error: err
         });
     });
 };
-
-
 module.exports = {
-    allusers,
-    createUser
-}
+    allusers: allusers,
+    createUser: createUser
+};
