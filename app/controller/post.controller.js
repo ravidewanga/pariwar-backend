@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Post = require('../model/post.model');
 
 const allposts = (req,res) => {
@@ -19,9 +20,7 @@ const postsubmit = (req,res) => {
         title   : req.body.title,
         author : req.body.author,
         body : req.body.body,
-        is_private : req.body.is_private,
-        create_at : Date.now(),
-        Updated_at : Date.now()
+        is_private : req.body.is_private
     });
     post.save().then(result => {
         console.log(result);
