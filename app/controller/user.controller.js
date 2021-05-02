@@ -2,12 +2,21 @@
 exports.__esModule = true;
 var mongoose = require("mongoose");
 var User = require("../model/user.model");
+var jwt = require("jsonwebtoken");
 var allusers = function (req, res) {
-    console.log('all users');
+    jwt.verify(req.headers.token, '00rah0ul',(err, decoded) => {
+        if(err){
+            console.log('token invalid');
+            res.status(500).json({
+                'msg' : 'token not valid'
+            });
+        }
+        res.send(decoded);
+    });
+
     User.find()
         .exec()
         .then(function (docs) {
-        console.log("doc length-" + docs.length);
         if (docs.length >= 0) {
             res.status(200).json(docs);
         }

@@ -1,13 +1,14 @@
-import express,{Application,Request,Response,NextFunction} from 'express';
+import {Application,Request,Response,NextFunction} from 'express';
 import * as mongoose from "mongoose";
 import * as User from '../model/user.model';
+import * as jwt from "jsonwebtoken";
 
 const allusers = (req:Request,res:Response) => {
-    console.log('all users');
+    var data = jwt.verify(req.headers.token,'00rah0ul');
+    console.log(data);
     User.find()
     .exec()
     .then(docs => {
-		console.log(`doc length-${docs.length}`);
         if(docs.length >= 0){
             res.status(200).json(docs);
         } else {
