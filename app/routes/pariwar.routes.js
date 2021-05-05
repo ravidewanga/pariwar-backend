@@ -4,17 +4,13 @@ const User = require("../controller/user.controller");
 const Auth = require("../controller/auth.controller");
 
 console.log('route page call');
-
-    router.get('/home',(req,res) =>{
-        console.log('Home page called.');
-    });
-
     //auth module
     router.post("/login", Auth.login);
+    router.post("/otpverify", Auth.otpVerify);
 
     //user module
     router.get("/user", User.allusers);
-    router.post("/user", User.createUser);
+    router.post("/register", User.createUser);
 
     //post module
     router.get("/post", post.allposts);

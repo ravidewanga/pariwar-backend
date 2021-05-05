@@ -4,16 +4,15 @@ var mongoose = require("mongoose");
 var User = require("../model/user.model");
 var jwt = require("jsonwebtoken");
 var allusers = function (req, res) {
-    jwt.verify(req.headers.token, '00rah0ul',(err, decoded) => {
-        if(err){
+    var data = jwt.verify(req.headers.token, String(process.env.TOKEN_SECRET), function (err, decoded) {
+        if (err) {
             console.log('token invalid');
             res.status(500).json({
-                'msg' : 'token not valid'
+                'msg': 'token not valid'
             });
         }
         res.send(decoded);
     });
-
     User.find()
         .exec()
         .then(function (docs) {
@@ -32,18 +31,42 @@ var allusers = function (req, res) {
 var createUser = function (req, res) {
     var user = new User({
         _id: new mongoose.Types.ObjectId(),
-        name: req.body.name,
-        age: req.body.age
+        fname: req.body.fname,
+        mname: req.body.mname,
+        lname: req.body.lname,
+        uname: req.body.uname,
+        dob: req.body.dob,
+        gender: req.body.gender,
+        email: req.body.email,
+        contact: req.body.contact,
+        password: req.body.password
     });
-    user.save().then(function (result) {
-        res.status(201).json({
-            message: 'user created',
-            post: result
-        });
-    })["catch"](function (err) {
-        res.status(500).json({
-            error: err
-        });
+    User.findOne({ contact: String(req.body.contact), isactive: true }, function (err, docs) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            if (docs != null) {
+                console.log("result - " + docs);
+                res.status(200).json({
+                    'code': 502,
+                    'msg': 'Contact no already register.'
+                });
+            }
+            else {
+                user.save().then(function (result) {
+                    user.varificationcode = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+                    res.status(201).json({
+                        code: 200,
+                        message: 'OTP send to your contact no.'
+                    });
+                })["catch"](function (err) {
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+            }
+        }
     });
 };
 module.exports = {

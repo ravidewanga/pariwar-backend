@@ -1,9 +1,60 @@
 const mongoose = require("mongoose");
+var validator = require('validator');
 
 const userScheme = mongoose.Schema({
     _id : mongoose.Schema.Types.ObjectId,
-    name : { type: String, required: true },
-    age : Number,
+    fname : { 
+        type: String, 
+        required: true,
+        trim :true
+    },
+    mname : { 
+        type: String, 
+        trim :true
+    },
+    lname : { 
+        type: String, 
+        required: true,
+        trim :true
+     },
+    uname : {
+        type : String,
+        unique: true
+    },
+    dob : { type : Date },
+    gender : { type : String },
+    email : {  
+        type : String, 
+        required :true,
+        trim :true,
+        lowercase : true, 
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error('Email not valid');
+            }
+        }
+    },
+    contact : { 
+        type : String,
+        required: true,
+        trim : true
+    },
+    isEmailVerified : {
+        type : Boolean,
+        default : false,
+    },
+    password : {
+        type : String,
+        required : true
+    },
+    verificationcode : {
+        type : String,
+        default: null 
+    },
+    isactive : {
+        type : Boolean,
+        default : false
+    },
     create_at : { type : Date, default: Date.now },
     Updated_at : { type : Date, default: null }
 });
