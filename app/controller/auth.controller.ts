@@ -13,23 +13,39 @@ const login = (req:Request,res:Response) => {
                 {contact :req.body.identity},
             ],
             
-        }, function (err:any, docs:any) {
+        }, async function (err:any, docs:any) {
         if (err){
             console.log(err)    
         }
         else{
-            const token = jwt.sign({ _id : docs._id.toString()},'00rah0ul');
-            res.status(200).json({
-                userDetail : docs,
-                token : token
-            });
+            if(docs != null){
+                const token = jwt.sign({ _id : docs._id },String(process.env.TOKEN_SECRET));
+                await User.findOneAndUpdate({_id:docs._id},{lastlogin : Date.now()},{new:true},function(err:any,newDoc:any){
+                    if(err){
+                        console.log(err);
+                    } else {
+                        res.status(200).json({
+                            code : 200,
+                            role : docs.urole,
+                            uname : docs.uname,
+                            email : docs.email,
+                            isactive : docs.isactive,
+                            lastlogin : docs.lastlogin,
+                            token : token
+                        });
+                    }
+                });
+            } else {
+                res.status(401).json({
+                    code : 401,
+                    msg : 'wrong credentials'
+                });
+            }
         }
     });
 };
 
 const otpVerify = (req:Request,res:Response) => {
-    
-    console.log(req.body);
     User.findOne(
         {   contact : req.body.contact,
             verificationcode : parseInt(req.body.otp)
@@ -40,12 +56,29 @@ const otpVerify = (req:Request,res:Response) => {
         }
         else{
             const token = jwt.sign({ _id : docs._id},String(process.env.TOKEN_SECRET));
-            res.status(200).json({
-                uname : docs.uname,
-                email : docs.email,
-                isactive : docs.isactive
-                //token : token
-            });
+            
+            var newDoc = await User.findOneAndUpdate({_id : docs._id}, {
+                'isactive' : true,
+                'lastlogin' : Date.now()
+            }, {
+                new: true
+              },function(err:any,newDoc:any){
+                  if(err){
+                    console.log(err)    
+                  }
+                  else {
+                    res.status(200).json({
+                        code : 200,
+                        role : newDoc.urole,
+                        uname : newDoc.uname,
+                        email : newDoc.email,
+                        isactive : newDoc.isactive,
+                        lastlogin : docs.lastlogin,
+                        token : token
+                    });
+                  }
+              });
+            
         }
     });
 }

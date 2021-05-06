@@ -19,10 +19,18 @@ const userScheme = mongoose.Schema({
      },
     uname : {
         type : String,
-        unique: true
+        unique: true,
+        required: true
+    },
+    urole : {
+        type : String,
+        default : 'user'
     },
     dob : { type : Date },
-    gender : { type : String },
+    gender : { 
+        type : String,
+        required: true
+     },
     email : {  
         type : String, 
         required :true,
@@ -55,6 +63,7 @@ const userScheme = mongoose.Schema({
         type : Boolean,
         default : false
     },
+    lastlogin : { type : Date },
     create_at : { type : Date, default: Date.now },
     Updated_at : { type : Date, default: null }
 });

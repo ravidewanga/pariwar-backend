@@ -6,26 +6,46 @@ import * as jwt from "jsonwebtoken";
 const allusers = (req:Request,res:Response) => {
     var data = jwt.verify(req.headers.token,String(process.env.TOKEN_SECRET),(err,decoded)=>{
         if(err){
-            console.log('token invalid');
             res.status(500).json({
                 'msg' : 'token not valid'
             });
         }
-        res.send(decoded);
-    });
-    User.find()
-    .exec()
-    .then(docs => {
-        if(docs.length >= 0){
-            res.status(200).json(docs);
-        } else {
-			res.status(200).json({'code':503,'msg':'No record found'});
+        else {
+            User.find().exec().then(docs => {
+                if(docs.length >= 0){
+                    res.status(200).json(docs);
+                } else {
+                    res.status(200).json({'code':503,'msg':'No record found'});
+                }
+            })
+            .catch(err => {
+                res.status(500).json({
+                    error:err
+                });
+            });
         }
-    })
-    .catch(err => {
-        res.status(500).json({
-            error:err
-        });
+    });
+    
+};
+
+const checkUser = (req:Request,res:Response) => {
+    User.findOne({uname : req.body.uname,isactive : true},function(err:any,doc:any){
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(doc != null){
+                res.status(200).json({
+                    code : 500,
+                    msg : 'User name already registred'
+                });
+            } else {
+                res.status(200).json({
+                    code : 200,
+                    msg : 'User name available'
+                });
+            }
+        }
     });
 };
 
@@ -56,12 +76,21 @@ const createUser = (req:Request,res:Response) => {
                 });
             } else {
                 user.save().then(result => {
-                    user.varificationcode = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-                    res.status(201).json({
-                        code : 200,
-                        message: 'OTP send to your contact no.',
-                        //post : result
-                    });
+                    var verificationCode = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+                    User.findOneAndUpdate({_id : result._id},{'verificationcode' : verificationCode },{
+                        new: true
+                      },function(err:any,newDoc:any){
+                        if(err){
+                            console.log(err)    
+                          }
+                        else{
+                            res.status(201).json({
+                                code : 201,
+                                message: 'OTP send to your contact no.',
+                                //post : result
+                            });
+                        }  
+                      });
                 })
                 .catch(err => {
                     res.status(500).json({
@@ -75,5 +104,6 @@ const createUser = (req:Request,res:Response) => {
 
 module.exports = {
     allusers,
-    createUser
+    createUser,
+    checkUser
 }

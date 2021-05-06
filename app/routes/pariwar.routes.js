@@ -5,12 +5,13 @@ const Auth = require("../controller/auth.controller");
 
 console.log('route page call');
     //auth module
-    router.post("/login", Auth.login);
+    router.post("/api/v1/user/login", Auth.login);
     router.post("/otpverify", Auth.otpVerify);
 
     //user module
     router.get("/user", User.allusers);
-    router.post("/register", User.createUser);
+    router.post("/api/v1/user/register", User.createUser);
+    router.get("/api/v1/user/check", User.checkUser);
 
     //post module
     router.get("/post", post.allposts);
