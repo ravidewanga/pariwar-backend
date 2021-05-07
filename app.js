@@ -1,30 +1,79 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const db = require("./app/model/index");
-
+const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
+var imgModel = require('./models/model');
+require('dotenv/config')
 
-var corsOptions = {
-    origin: "http://localhost:8081"
-};
 
-app.use(cors());
 
-// parse requests of content-type - application/json
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(bodyParser.urlencoded({ extended: true }));
 
-db.sequelize.sync();
+mongoose.connect(process.env.MONGO_URL,{useNewUrlParser:true,useUnifiedTopology:true},err =>{
+    console.log('Connected to mongodb')
+})
 
-app.get("/", (req, res) => {
-    res.json({ message: "Welcome to the node js application." });
+
+
+//middlewares
+const multer = require('multer');
+ 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+ 
+const upload = multer({ storage: storage });
+
+
+//routes
+
+app.get('/', (req, res) => {
+	imgModel.find({}, (err, items) => {
+		if (err) {
+			console.log(err);
+			res.status(500).send('An error occurred', err);
+		}
+		else {
+			res.render('imagesPage', { items: items });
+		}
+	});
 });
 
-require("./app/routes/pariwar.routes")(app);
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+
+
+app.post('/posts', upload.single('image'), (req, res, next) => {
+
+	const obj = {
+		name: req.body.name,
+		desc: req.body.desc,
+		img: {
+			data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+			contentType: 'image/png'
+		}
+	}
+	imgModel.create(obj, (err, item) => {
+		if (err) {
+			console.log(err);
+		}
+		else {
+			 item.save();
+			res.redirect('/');
+		}
+	});
 });
+
+
+
+app.listen(3000,()=>{
+    console.log('Server is Running at 3000')
+})
