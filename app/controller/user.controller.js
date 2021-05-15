@@ -23,7 +23,7 @@ const allusers = (req,res) => {
                 });
             });
         //}
-    });
+    //});
     
 };
 
