@@ -3,13 +3,13 @@ const User = require('../model/user.model');
 const jwt = require("jsonwebtoken");
 
 const allusers = (req,res) => {
-    var data = jwt.verify(req.headers.token,String(process.env.TOKEN_SECRET),(err,decoded)=>{
-        if(err){
-            res.status(500).json({
-                'msg' : 'token not valid'
-            });
-        }
-        else {
+    // var data = jwt.verify(req.headers.token,String(process.env.TOKEN_SECRET),(err,decoded)=>{
+    //     if(err){
+    //         res.status(500).json({
+    //             'msg' : 'token not valid'
+    //         });
+    //     }
+    //     else {
             User.find().exec().then(docs => {
                 if(docs.length >= 0){
                     res.status(200).json(docs);
@@ -22,7 +22,7 @@ const allusers = (req,res) => {
                     error:err
                 });
             });
-        }
+        //}
     });
     
 };
