@@ -1,55 +1,65 @@
-"use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
-var Post = require("../model/post.model");
-var Multer = require("multer");
-var fs = require("fs");
-var path = require("path");
-var storage = Multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'upload');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now());
-    }
-});
-var upload = Multer({ storage: storage });
-var allposts = function (req, res) {
+const mongoose = require('mongoose');
+const Post = require('../model/post.model');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+
+
+const allposts = (req,res) => {
     Post.find()
-        .exec()
-        .then(function (docs) {
+    .exec()
+    .then(docs => {
         res.status(200).json(docs);
-    })["catch"](function (err) {
+    })
+    .catch(err => {
         res.status(500).json({
-            error: err
+            error:err
         });
     });
 };
-var postsubmit = function (req, res) {
-    var post = new Post({
-        _id: new mongoose.Types.ObjectId(),
-        title: req.body.title,
-        author: req.body.author,
-        body: req.body.body,
-        is_private: req.body.is_private,
-        img: {
-            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-            contentType: 'image/png'
-        }
+
+
+// app.post('/upload', upload.single('upload'), (req, res) => {
+//     res.send()
+// }, (error, req, res, next) => {
+//     res.status(400).send({ error: error.message })
+// })
+
+const postsubmit  = (req,res) => {
+    console.log('postsubmit called');
+    console.log(req.file);
+    console.log(req.file.filename);
+    const post = new Post({
+        _id : new mongoose.Types.ObjectId(),
+        title   : req.body.title,
+        author : req.body.author,
+        body : req.body.body,
+        is_private : req.body.is_private,
+        attachments : [
+            {
+             file : req.file.filename,
+             type : req.file.mimetype,
+             path : req.file.path,
+             size : req.file.size   
+            }
+        ]
     });
-    post.save().then(function (result) {
+    post.save().then(result => {
         console.log(result);
         res.status(201).json({
             message: 'document saved',
-            post: result
+            post : result
         });
-    })["catch"](function (err) {
+    })
+    .catch(err => {
         res.status(500).json({
-            error: err
+            error : err
         });
     });
 };
+
+
 module.exports = {
-    allposts: allposts,
-    postsubmit: postsubmit
-};
+    allposts,
+    postsubmit
+}

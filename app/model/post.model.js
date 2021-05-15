@@ -15,7 +15,13 @@ const postScheme = mongoose.Schema({
         contentType: String
     },
     //comments : { type: Number, default: 0},
-    attachment : { type : String, default: null },
+    //attachment : { type : String, default: null },
+    attachments : [{
+        "file" : { type : String, default: null },
+        "type" : { type : String, default: null },
+        "path" : { type : String, default: null },
+        "size" : { type : Number, default: null },
+        }],
     is_private : { type : Boolean, default: false },
     is_active : { type : Boolean, default: true },
     create_at : { type : Date, default: Date.now },
