@@ -4,16 +4,15 @@ const jwt = require("jsonwebtoken");
 
 const login = (req,res) => {
     let msg = [];
-    if(req.body.identity == '' && req.body.identity == undifined && req.body.identity === null){
-        msg.push('identity parameter missing');
-        // res.status(500).json({
-        //     code : 500,
-        //     msg : 'identity parameter missing'
-        // });
+    if(req.body.identity == '' || req.body.identity == undefined || req.body.identity === null){
+        let temp = {};
+        temp['identity'] = 'identity parameter missing';
+        msg.push(temp);
     }
-    if(req.body.password == '' && req.body.password == undifined && req.body.password === null){
-        msg.push('password parameter missing');
-        
+    if(req.body.password == '' || req.body.password == undefined || req.body.password === null){
+         let temp = {};
+         temp['password'] = 'password parameter missing';
+        msg.push(temp);   
     }
     if(msg.length > 0){
         res.status(500).json({
@@ -28,6 +27,7 @@ const login = (req,res) => {
             $or : [
                 {email :req.body.identity},
                 {contact :req.body.identity},
+                {uname :req.body.identity},
             ],
             
         }, async function (err, docs) {
@@ -63,6 +63,24 @@ const login = (req,res) => {
 };
 
 const otpVerify = (req,res) => {
+    let msg = [];
+    if(req.body.contact == '' || req.body.contact.length < 10 || req.body.contact == undefined || req.body.contact === null){
+        let temp = {};
+        temp['contact'] = 'contact parameter missing';
+        msg.push(temp);
+    }
+    if(req.body.otp == '' || req.body.otp.length == 4 || req.body.otp == undefined || req.body.otp === null){
+         let temp = {};
+         temp['otp'] = 'otp parameter missing';
+        msg.push(temp);   
+    }
+    if(msg.length > 0){
+        res.status(500).json({
+                code : 500,
+                msg : msg
+        });
+    }
+    
     User.findOne(
         {   contact : req.body.contact,
             verificationcode : parseInt(req.body.otp)

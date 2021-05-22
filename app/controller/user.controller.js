@@ -28,6 +28,19 @@ const allusers = (req,res) => {
 };
 
 const checkContact = (req,res) => {
+    let msg = [];
+    if(req.body.contact == '' || req.body.contact < 10 || req.body.contact == undefined || req.body.contact === null){
+        let temp = {};
+        temp['contact'] = 'contact parameter missing';
+        msg.push(temp);
+    }
+    if(msg.length > 0){
+        res.status(500).json({
+                code : 500,
+                msg : msg
+        });
+    }
+
     User.findOne({contact : req.body.contact,isactive : true},function(err,doc){
         if(err){
             console.log(err);
@@ -49,7 +62,19 @@ const checkContact = (req,res) => {
 };
 
 const checkUser = (req,res) => {
-    console.log(req.body.uname);
+    
+    let msg = [];
+    if(req.body.uname == '' || req.body.uname < 3 || req.body.uname == undefined || req.body.uname === null){
+        let temp = {};
+        temp['uname'] = 'uname parameter missing';
+        msg.push(temp);
+    }
+    if(msg.length > 0){
+        res.status(500).json({
+                code : 500,
+                msg : msg
+        });
+    }
     User.findOne({uname : req.body.uname,isactive : true},function(err,doc){
         if(err){
             console.log(err);
@@ -71,6 +96,55 @@ const checkUser = (req,res) => {
 };
 
 const createUser = (req,res) => {
+    let msg = [];
+    if(req.body.fname == '' || req.body.fname < 3 || req.body.fname == undefined || req.body.fname === null){
+        let temp = {};
+        temp['fname'] = 'fname parameter missing';
+        msg.push(temp);
+    }
+    if(req.body.lname == '' || req.body.lname < 3 || req.body.lname == undefined || req.body.lname === null){
+        let temp = {};
+        temp['lname'] = 'lname parameter missing';
+        msg.push(temp);
+    }
+    if(req.body.uname == '' || req.body.uname < 3 || req.body.uname == undefined || req.body.uname === null){
+        let temp = {};
+        temp['uname'] = 'uname parameter missing';
+        msg.push(temp);
+    }
+    if(req.body.dob == '' || req.body.dob == undefined || req.body.dob === null){
+         let temp = {};
+         temp['dob'] = 'dob parameter missing';
+        msg.push(temp);   
+    }
+    if(req.body.gender == '' || req.body.gender == undefined || req.body.gender === null){
+        let temp = {};
+        temp['gender'] = 'gender parameter missing';
+       msg.push(temp);   
+   }
+   if(req.body.email == '' || req.body.email == undefined || req.body.email === null){
+    let temp = {};
+    temp['email'] = 'email parameter missing';
+    msg.push(temp);   
+    }
+    if(req.body.contact == '' || req.body.contact == undefined || req.body.contact === null){
+        let temp = {};
+        temp['contact'] = 'contact parameter missing';
+        msg.push(temp);   
+    }
+    if(req.body.password == '' || req.body.password == undefined || req.body.password === null){
+        let temp = {};
+        temp['password'] = 'password parameter missing';
+        msg.push(temp);   
+    }
+
+    if(msg.length > 0){
+        res.status(500).json({
+                code : 500,
+                msg : msg
+        });
+    }
+
     const user = new User({
         _id : new mongoose.Types.ObjectId(),
         fname : req.body.fname,

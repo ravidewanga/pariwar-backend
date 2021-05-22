@@ -26,21 +26,44 @@ const allposts = (req,res) => {
 // })
 
 const postsubmit  = (req,res) => {
+    let msg = [];
+    if(req.body.title == '' || req.body.title == undefined || req.body.title === null){
+        let temp = {};
+        temp['title'] = 'title parameter missing';
+        msg.push(temp);
+    }
+    if(req.body.author == ''|| req.body.author == undefined || req.body.author === null){
+         let temp = {};
+         temp['author'] = 'author parameter missing';
+        msg.push(temp);   
+    }
+    if(req.body.body == ''|| req.body.body == undefined || req.body.body === null){
+        let temp = {};
+        temp['body'] = 'body parameter missing';
+       msg.push(temp);   
+   }
+    if(msg.length > 0){
+        res.status(500).json({
+                code : 500,
+                msg : msg
+        });
+    }
+
     console.log('postsubmit called');
     console.log(req.file);
-    console.log(req.file.filename);
     const post = new Post({
         _id : new mongoose.Types.ObjectId(),
         title   : req.body.title,
         author : req.body.author,
         body : req.body.body,
         is_private : req.body.is_private,
+
         attachments : [
             {
-             file : req.file.filename,
-             type : req.file.mimetype,
-             path : req.file.path,
-             size : req.file.size   
+             file : typeof req.file != 'undefined' ? req.file.filename : null,
+             type : typeof req.file != 'undefined' ? req.file.mimetype : null,
+             path : typeof req.file != 'undefined' ? req.file.path : null,
+             size : typeof req.file != 'undefined' ? req.file.size : null   
             }
         ]
     });

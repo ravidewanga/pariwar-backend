@@ -5,16 +5,18 @@ const Auth = require("../controller/auth.controller");
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const apiVersion = 'v1';
 
 
 const upload = multer({
-    dest: 'images',
-    limits: {
-        fileSize: 1000000000000000000
-    },
+    dest: 'rahul',
+    // limits: {
+    //     fileSize: 0
+    // },
     filename: function (req, file, cb) { 
         cb(null , file.originalname);   
-     }
+    }
+
     // fileFilter(req, file, cb) {
     //     if (!file.originalname.match(/\.(jpg|png|jpeg|PNG)$/)) {
     //         return cb(new Error('Please upload a Word document'))
