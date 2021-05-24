@@ -9,7 +9,7 @@ const apiVersion = 'v1';
 
 
 const upload = multer({
-    dest: 'rahul',
+    dest: 'images',
     // limits: {
     //     fileSize: 0
     // },
