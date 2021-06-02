@@ -2,6 +2,7 @@ var router = require("express").Router();
 const post = require("../controller/post.controller");
 const User = require("../controller/user.controller");
 const Auth = require("../controller/auth.controller");
+const Group = require("../controller/group.controller");
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
@@ -40,4 +41,7 @@ console.log('route page call');
     //post module
     router.get("/api/v1/post", post.allposts);
     router.post("/api/v1/post",upload.single('upload'), post.postsubmit);
+
+    //group module
+    router.post("/api/v1/group", Group.createGroup);
 module.exports = router;
