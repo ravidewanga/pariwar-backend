@@ -171,7 +171,8 @@ const createUser = (req,res) => {
                 });
             } else {
                 user.save().then(result => {
-                    var verificationCode = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+                    //var verificationCode = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+                    var verificationCode = 9999;
                     User.findOneAndUpdate({_id : result._id},{'verificationcode' : verificationCode },{
                         new: true
                       },function(err,newDoc){
