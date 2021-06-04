@@ -63,13 +63,14 @@ const login = (req,res) => {
 };
 
 const otpVerify = (req,res) => {
+	console.log(req.body);
     let msg = [];
     if(req.body.contact == '' || req.body.contact.length < 10 || req.body.contact == undefined || req.body.contact === null){
         let temp = {};
         temp['contact'] = 'contact parameter missing';
         msg.push(temp);
     }
-    if(req.body.otp == '' || req.body.otp.length == 4 || req.body.otp == undefined || req.body.otp === null){
+    if(req.body.otp == '' || req.body.otp.length < 4 || req.body.otp == undefined || req.body.otp === null){
          let temp = {};
          temp['otp'] = 'otp parameter missing';
         msg.push(temp);   
@@ -87,6 +88,7 @@ const otpVerify = (req,res) => {
         }, 
         async function (err, docs) {
         if (err){
+			console.log(err);
             res.send('user not exist.');  
         }
         else{
