@@ -1,8 +1,7 @@
-//import {Schema, SchemaTypes, model} from 'mongoose';
-//const {Schema, SchemaTypes} = require('mongoose');
 const mongoose = require("mongoose");
 
 const GroupSchema = mongoose.Schema({
+    _id : mongoose.Schema.Types.ObjectId,
     name:{
         type: String,
         trim: true,
@@ -20,22 +19,22 @@ const GroupSchema = mongoose.Schema({
         required: 'Group type is required',
     },
     user:{
-        type: mongoose.SchemaTypes.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: 'User is required',
         ref: 'user'
     },
-    members:[{
-        type: mongoose.SchemaTypes.ObjectId,
+    members:[{  
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     }],
     admins:[{
-        type: mongoose.SchemaTypes.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: 'User is required',
         ref: 'user'
     }],
     moderators:[{
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'user'
+        // ref: 'user'
     }]
 
 }, {timestamps: true});
