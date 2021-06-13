@@ -1,32 +1,63 @@
 //import { GroupModel } from '../models/Group.Models'
 //import { NOT_FOUND, OK, CREATED, NOT_ACCEPTABLE, NOT_MODIFIED } from 'http-status-codes'
 //import { prepareError } from '../utils/functions';
-
-const {GroupModel} = require('../model/group.model');
+const jwt = require("jsonwebtoken");
+const mongoose = require('mongoose');
+const GroupModel = require('../model/group.model');
 const { NOT_FOUND, OK, CREATED, NOT_ACCEPTABLE, NOT_MODIFIED } = require('http-status-codes');
 
-const createGroup = async (req, res) => {
-    try {
-        if (req?.body?.name?.trim()?.length === 0) {
-            res.status(NOT_ACCEPTABLE).send({ error: "Name cannot be empty" })
-        }
-        const group = await GroupModel.create({
-            user: req.user.id,
-            name: req.body.name,
-            description: req?.body?.description ?? '',
-            type: req.body.type,
-            members: [req.user.id],
-            admins: [req.user.id],
-            moderators: [],
-        })
-        if (group) {
-            return res.status(CREATED).send({ data: group })
-        }
-        return res.status(NOT_ACCEPTABLE).send({ data: "Cannot Create" })
-    } catch (error) {
-        res.status(NOT_ACCEPTABLE).send({ error: error.message })
-    }
-}
+
+const createGroup  = (req,res) => {
+    console.log('postsubmit called');
+    console.log(req.file);
+    const group = new GroupModel({
+        _id : new mongoose.Types.ObjectId(),
+        user: jwt.decode(req.headers.token)._id,
+        name: req.body.name,
+        description: req?.body?.description ?? '',
+        type: req.body.type,
+        // members: [req.user.id],
+        // admins: [req.user.id],
+        // moderators: [],
+    });
+    group.save().then(result => {
+        console.log(result);
+        res.status(201).json({
+            message: 'document saved',
+            post : result
+        });
+    })
+    .catch(err => {
+        res.status(500).json({
+            error : err
+        });
+    });
+};
+
+// const createGroup = async (req, res) => {
+//     var userId = jwt.decode(req.headers.token)._id;
+    
+//     try {
+//         if (req?.body?.name?.trim()?.length === 0) {
+//             res.status(NOT_ACCEPTABLE).send({ error: "Name cannot be empty" })
+//         }
+//         const group = await GroupModel.create({
+//             user: userId,
+//             name: req.body.name,
+//             description: req?.body?.description ?? '',
+//             type: req.body.type,
+//             // members: [req.user.id],
+//             // admins: [req.user.id],
+//             // moderators: [],
+//         })
+//         if (group) {
+//             return res.status(CREATED).send({ data: group })
+//         }
+//         return res.status(NOT_ACCEPTABLE).send({ data: "Cannot Create" })
+//     } catch (error) {
+//         res.status(NOT_ACCEPTABLE).send({ error: error.message })
+//     }
+// }
 
 const getGroup = async (req, res) => {
     try {

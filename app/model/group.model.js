@@ -23,24 +23,8 @@ const GroupSchema = mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         required: 'User is required',
         ref: 'user'
-    },
-    members:[{
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'user'
-    }],
-    admins:[{
-        type: mongoose.SchemaTypes.ObjectId,
-        required: 'User is required',
-        ref: 'user'
-    }],
-    moderators:[{
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'user'
-    }]
-
+    }
 }, {timestamps: true});
-
-
 
 //GroupSchema.plugin(require('mongoose-beautiful-unique-validation'));
 
