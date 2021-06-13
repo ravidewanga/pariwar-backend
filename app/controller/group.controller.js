@@ -200,15 +200,16 @@ const removeAdmin = async (req, res) => {
     return res.status(NOT_MODIFIED).send({ error: "Unable to add" })
 }
 
+
 module.exports = {
-    createGroup,
-    getGroup,
-    getGroups,
-    updateGroup,
-    addMember,
-    removeAdmin,
-    removeMember,
-    addModerator,
-    removeModerator,
-    addAdmin
+    createGroup
+    // getGroup,
+    // getGroups,
+    // updateGroup,
+    // addMember,
+    // removeAdmin,
+    // removeMember,
+    // addModerator,
+    // removeModerator,
+    // addAdmin
 }
